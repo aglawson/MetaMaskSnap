@@ -1,8 +1,10 @@
 import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
 import { panel, text } from '@metamask/snaps-sdk';
+import ethers from 'ethers';
 
 async function getFees() {
   const response = await fetch('https://beaconcha.in/api/v1/execution/gasnow'); 
+  console.log(response)
   return response.text();
 }
 
@@ -26,7 +28,11 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
             type: 'alert',
             content: panel([
               text(`Hello, **${origin}**!`),
-              text(`Current gas fee estimates: ${fees}`),
+              text(`Current gas fee estimates`),
+              text(`Rapid: ${((JSON.parse(fees).data.rapid) * 0.000000001).toFixed(2).toString()} gwei`),
+              text(`Fast: ${((JSON.parse(fees).data.fast) * 0.000000001).toFixed(2).toString()} gwei`),
+              text(`Standard: ${((JSON.parse(fees).data.standard) * 0.000000001).toFixed(2).toString()} gwei`),
+
             ]),
           }
         });
